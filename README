@@ -1,0 +1,71 @@
+NAME
+    DBIx::Kohada -
+
+SYNOPSIS
+        package MyApp::DB;
+        use base qw/DBIx::Kohada/;
+        __PACKAGE__->schema_class('MyApp::DB::Schema');
+
+        package MyApp::DB::Schema;
+        use base qw/DBIx::Kohada::Schema/;
+
+        __PACKAGE__->register_row_class(
+            class   => 'MyApp::DB::User',
+            table   => 'user',
+            columns => [qw/user_id name email/],
+            pk      => 'user_id',
+        );
+
+        package MyApp::DB::User;
+        use base qw/DBIx::Kohada::Row/;
+
+        __PACKAGE__->add_trigger(
+            'BEFORE_INSERT' => sub {
+                my $attr = shift;
+                $attr->{token} ||= rand();
+            }
+        );
+
+        package main;
+        use MyApp::DB::Schema;
+        use DBIx::Kohada::Schema;
+        use DBI;
+
+        my $dbh = DBI->connect(...);
+        my $db = MyApp::DB->new(dbh => $dbh);
+        $db->dbh; # => #dbh
+        my $user = $db->insert('user' => {name => 'john', email => 'john@exapmle.com'});
+        say $user->name; # => john
+        $user->name('mark');
+        $user->update;
+        $user->delete();
+
+        my @users = $db->search_by_sql('user' => q{SELECT * FROM user WHERE name LIKE 'dai%'});
+
+        my $user = $db->single('user' => {user_id => 3});
+        my $iter = $db->search('user' => {user_id => 3});
+        my @users = $db->search('user' => {user_id => 3});
+
+DESCRIPTION
+    DBIx::Kohada is
+
+TODO
+    trigger support
+
+        BEFORE_INSERT
+        AFTER_INSERT
+        BEFORE_UPDATE
+        AFTER_UPDATE
+        BEFORE_DELETE
+        AFTER_DELETE
+
+AUTHOR
+    Tokuhiro Matsuno <tokuhirom AAJKLFJEF GMAIL COM>
+
+SEE ALSO
+LICENSE
+    Copyright (C) Tokuhiro Matsuno
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+

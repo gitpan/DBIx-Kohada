@@ -1,0 +1,9 @@
+digraph kohada {
+    Schema->Row
+    "$dbh" -> DB
+    DB->Schema
+    DB->Iterator
+    Iterator->Row
+    Iterator->Schema
+    DB->TransactionManager
+};
