@@ -3,6 +3,7 @@ abstract: ActiveRecord
 author:
   - 'Tokuhiro Matsuno <tokuhirom AAJKLFJEF GMAIL COM>'
 build_requires:
+  DBD::SQLite: 0
   ExtUtils::MakeMaker: 6.42
   Test::More: 0.96
   Test::Requires: 0
@@ -30,4 +31,4 @@ requires:
   perl: 5.8.1
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01
+version: 0.02
